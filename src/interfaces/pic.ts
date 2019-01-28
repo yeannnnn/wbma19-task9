@@ -1,4 +1,4 @@
-export interface Pic {
+export interface Media {//  Pic
   file_id: number;
   user_id: number;
   filename: string;
@@ -13,7 +13,32 @@ export interface Pic {
 }
 
 export interface Thumbnail {
-  160: string;
-  320?: string;
-  640?: string;
+  w160: string;
+  w320?: string;
+  w640?: string;
 }
+
+export interface User {
+  user_id?: number;
+  username: string;
+  password?: string;
+  email?: string;
+  full_name?: string;
+  time_created?: Date;
+}
+
+export interface LoginResponse {
+  message: string;
+  user_id: number;
+  user: User;
+  token: string;
+}
+export interface CheckUserName {
+  message: string;
+}
+/*
+export interface RegisteredResponse {
+  message: string;
+  user_id: number;
+}
+*/

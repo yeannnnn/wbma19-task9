@@ -1,20 +1,22 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
-import { Pic } from '../../interfaces/pic';
+import { Media } from '../../interfaces/pic';
 import { HttpClient } from '@angular/common/http';
 import { MediaProvider } from '../../providers/media/media';
+import { Observable } from 'rxjs';
 
-// import {Observable} from 'rxjs';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
 })
 export class HomePage {
-  picArray: Pic[] = []; // Pic[] = [] if get error push dont exist
+  mediaArray: Observable<Media[]>;
+  mediaFilePath = 'https://media.mw.metropolia.fi/wbma/uploads/';
+  // picArray: Pic[] = []; // Pic[] = [] if get error push dont exist
   // picArray2: Observable<Pic[]>;
-  uploadUrl = 'https://media.mw.metropolia.fi/wbma/uploads/'; // links don't need a type
+  // uploadUrl = 'https://media.mw.metropolia.fi/wbma/uploads/'; // links don't need a type
 
   constructor(
     public navCtrl: NavController,
@@ -29,7 +31,11 @@ export class HomePage {
   }
 
   getAllFiles() {
-    this.mediaProvider.getAllMedia().subscribe((data: Pic[]) => {
+    this.mediaArray = this.mediaProvider.getAllMedia();
+  }
+/*
+  getAllFiles1() {
+     this.mediaProvider.getAllMedia().subscribe((data: Media[]) => {
       console.log('data', data);
       /* providers A:
       this.picArray = data.map((pic: Pic) => {
@@ -44,27 +50,27 @@ export class HomePage {
       });
       */
       // providers B:
-      data.forEach((pic: Pic) => {
-        // add files to picArray
-        this.mediaProvider.getSingleMedia(pic.file_id).
-          subscribe((file: Pic) => {
-            this.picArray.push(file);
-          });
-
-      });
-    });
-
+  //     data.forEach((media: Media) => {
+  //       //add files to picArray
+  //      this.mediaProvider.getSingleMedia(media.file_id).
+  //        subscribe((file: Media) => {
+  //          this.mediaArray.push(file);
+  //        });
+  //
+  //    });
+  //   });
+  //
+  // }
+  ngOnInit() {
+    this.getAllFiles();
+    // this.getAllFiles2();
   }
-
   /*
     getAllFiles2() {
       this.picArray2 = this.mediaProvider.getAllMedia();
       console.log(this.picArray2);
     }
   */
-  ngOnInit() {
-    this.getAllFiles();
-    // this.getAllFiles2();
-  }
+
 
 }
