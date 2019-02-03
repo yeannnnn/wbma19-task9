@@ -18,7 +18,10 @@ export class MediaProvider {
   mediaAPI = 'https://media.mw.metropolia.fi/wbma'; // configUrl
   mediaArray: Media[];
   logged = false;
-
+  username: string;
+  user_id: number;
+  fullname: string;
+  avatar;
   constructor(public http: HttpClient) {
     console.log('Hello MediaProvider Provider');
   }
@@ -60,5 +63,11 @@ export class MediaProvider {
   */
   checkIfUserExist(user: User) {
     return this.http.get(this.mediaAPI + '/users/username/' + user.username);
+  }
+
+  user(user: User) {
+    this.username = user.username;
+    this.fullname = user.full_name;
+    this.user_id = user.user_id;
   }
 }

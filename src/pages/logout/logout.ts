@@ -18,25 +18,16 @@ import { LoginResponse, Media, User } from '../../interfaces/pic';
   templateUrl: 'logout.html',
 })
 export class LogoutPage {
-  mediaArray: Observable<Media>;
-  user: User;
-  id;
-  mediaFilePath = 'https://media.mw.metropolia.fi/wbma/uploads/';
+  avatar;
+  url = 'https://media.mw.metropolia.fi/wbma/uploads/';
+  mediaArray: Media[];
+
 
   constructor(
     public navCtrl: NavController, public navParams: NavParams,
     public mediaProvider: MediaProvider) {
   }
 
-  getFiles() {
-
-    this.mediaProvider.login(this.user).subscribe(
-      (response: LoginResponse) => {
-        console.log(response);
-        this.id = response.user_id;
-      });
-    this.mediaArray = this.mediaProvider.getSingleMedia(this.id);
-  }
 
   logout() {
     localStorage.clear();
@@ -47,10 +38,10 @@ export class LogoutPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LogoutPage');
+
+    this.mediaProvider.getSingleMedia(28).subscribe((response: Media) =>{
+      this.avatar = response.filename;
+    });
   }
 
-  ngOnInit() {
-    this.getFiles();
-    // this.getAllFiles2();
-  }
 }
