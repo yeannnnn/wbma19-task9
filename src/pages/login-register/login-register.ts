@@ -39,9 +39,11 @@ export class LoginRegisterPage {
     this.mediaProvider.login(this.user).subscribe(
       (response: LoginResponse) => {
         console.log(response);
-        localStorage.setItem('token', response.token);
-        this.navCtrl.push(HomePage);
         this.mediaProvider.logged = true;
+        // TODO: save the token to localstorage
+        localStorage.setItem('token', response.token);
+        // move to home page (use navCtrl)
+        this.navCtrl.push(HomePage);
       },
       error => {
         console.log(error);

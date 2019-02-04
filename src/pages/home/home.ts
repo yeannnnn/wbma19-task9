@@ -5,6 +5,7 @@ import { Media } from '../../interfaces/pic';
 import { HttpClient } from '@angular/common/http';
 import { MediaProvider } from '../../providers/media/media';
 import { Observable } from 'rxjs';
+import { UploadPage } from '../upload/upload';
 
 
 @Component({
@@ -26,13 +27,33 @@ export class HomePage {
 
   }
 
-  showImage(image) {
-    this.photoViewer.show(image);
+  goToUpload() {
+    this.navCtrl.push(UploadPage);
+  }
+
+  // showImage(image) {
+  //   this.photoViewer.show(image);
+  // }
+
+  showImage(fileId: number) {   // (image)
+    // this.photoViewer.show(image);
+    this.mediaProvider.getSingleMedia(fileId).subscribe(result => {
+      console.log(result);
+    }, error => {
+        console.log(error);
+      },
+    );
   }
 
   getAllFiles() {
     this.mediaArray = this.mediaProvider.getAllMedia();
   }
+
+  ionViewDidEnter() {    // ngOnInit(){
+    this.getAllFiles();
+    // this.getAllFiles2();
+  }
+
 /*
   getAllFiles1() {
      this.mediaProvider.getAllMedia().subscribe((data: Media[]) => {
@@ -61,10 +82,7 @@ export class HomePage {
   //   });
   //
   // }
-  ngOnInit() {
-    this.getAllFiles();
-    // this.getAllFiles2();
-  }
+
   /*
     getAllFiles2() {
       this.picArray2 = this.mediaProvider.getAllMedia();

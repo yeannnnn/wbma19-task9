@@ -61,6 +61,7 @@ export class MediaProvider {
       return this.http.post<RegisteredResponse>(this.mediaAPI + '/users', user);
     }
   */
+
   checkIfUserExist(user: User) {
     return this.http.get(this.mediaAPI + '/users/username/' + user.username);
   }
@@ -69,5 +70,30 @@ export class MediaProvider {
     this.username = user.username;
     this.fullname = user.full_name;
     this.user_id = user.user_id;
+  }
+
+  getFilesByTag(tag) {
+    // singe file
+    return this.http.get<Media[]>(this.mediaAPI + 'tags/' + tag);
+  }
+
+
+  checkToken() {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'x-access-token': localStorage.getItem('token'),
+      }),
+    };
+    return this.http.get<User>(this.mediaAPI + 'users/user', httpOptions);
+  }
+
+  upload(data: any) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'x-access-token': localStorage.getItem('token'),
+      }),
+    };
+    return this.http.post<LoginResponse>(this.mediaAPI + 'media', data, httpOptions);
   }
 }

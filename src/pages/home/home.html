@@ -3,6 +3,9 @@
     <ion-title>
       Ionic Blank
     </ion-title>
+    <ion-buttons end *ngIf="mediaProvider.logged">
+      <button (click)="goToUpload()">Upload</button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
