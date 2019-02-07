@@ -16,6 +16,7 @@ import { MediaProvider } from '../../providers/media/media';
 export class UploadPage {
   filedata = '';
   file: File;
+  type = '';
   title = '';
   description = '';
 
@@ -41,15 +42,23 @@ export class UploadPage {
       // console.log(reader.result);
       this.filedata = reader.result; // save the result in filedata(variable)
     };
-    reader.readAsDataURL(this.file);   // start load the file, when the load done, console.log above. //this is also what we need to upload
-
+    // if media is audio or video use some default image
+    if (this.file.type.includes('video')) {
+      this.filedata = 'http://via.placeholder.com/500X200/000?text=Video';
+    } else if (this.file.type.includes('audio')) {
+      this.filedata = 'http://via.placeholder.com/500X200/000?text=Audio';
+    } else {
+      reader.readAsDataURL(this.file);   // start load the file, when the load done, console.log above. //this is also what we need to upload
+    }
   }
 
   upload() {
+    // const desc = `<description>${this.description}</description>`;
+    const filter = '<filters>filtersAsText</filters>';   // Save filter settings as tag or part of the description when file is uploaded
     // show spinner
     const fd = new FormData();
     fd.append('title', this.title);
-    fd.append('description', this.description);
+    fd.append('description', this.description + filter); // desc + filter
     fd.append('file', this.file);
     this.mediaProvider.upload(fd).subscribe(resp => {
       console.log(resp);

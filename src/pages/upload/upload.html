@@ -25,7 +25,7 @@
     </ion-item>
     <ion-item>
       <ion-label>Choose media file</ion-label>
-      <ion-input type="file" (change)="handleChange($event)" ></ion-input>
+      <ion-input type="file" accept="image/*, video/*, audio/*" (change)="handleChange($event)" ></ion-input>
     </ion-item>
     <button ion-button type="submit" block>Upload</button>
   </form>

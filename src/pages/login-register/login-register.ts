@@ -1,74 +1,112 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
-import { CheckUserName, LoginResponse, User } from '../../interfaces/pic';
-import { HomePage } from '../home/home';
+import { Component, ViewChild } from '@angular/core';
+import {
+  AlertController,
+  NavController,
+  NavParams,
+} from 'ionic-angular';
 import { MediaProvider } from '../../providers/media/media';
-import { HttpClient } from '@angular/common/http';
-
+import {
+  Login,
+  User,
+  UserCreated,
+  UserExists,
+} from '../../interfaces/media';
+import { NgForm } from '@angular/forms';
 
 /**
  * Generated class for the LoginRegisterPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
  */
-
 @Component({
   selector: 'page-login-register',
   templateUrl: 'login-register.html',
 })
 export class LoginRegisterPage {
-  user: User = { username: null };
+
+  userAlert = false;
+
+  @ViewChild('lf') loginForm: NgForm;
+  @ViewChild('rf') registerForm: NgForm;
+
+  showRegister = false;
+  user: User = { username: '' };
+  confirmPassword = '';
 
   constructor(
     public navCtrl: NavController, public navParams: NavParams,
-    public mediaProvider: MediaProvider, public http: HttpClient) {
+    public mediaProvider: MediaProvider, public alertCtrl: AlertController) {
   }
 
-  ngOnInit() {
-    this.checkLogin();
+  swapLoginRegisterForms(): void {
+    this.showRegister = !this.showRegister;
   }
 
-  checkLogin() {
-    if (localStorage.getItem('token')) {
-      this.navCtrl.push(HomePage);
+  showAlert(message: string): void {
+    const alert = this.alertCtrl.create({
+      title: 'Error!',
+      subTitle: message,
+      buttons: ['OK'],
+    });
+    alert.present().catch();
+  }
+
+  /**
+   * Login to WBMA service
+   *
+   * @param automatic Set true if logging in without filling the login form
+   */
+  login(automatic = false): void {
+    console.log('logging in:', this.user.username);
+    this.mediaProvider.login(this.user).subscribe((data: Login) => {
+      console.log(data);
+      localStorage.setItem('token', data.token);
+      this.mediaProvider.token = data.token;
+      this.mediaProvider.user = data.user;
+      this.mediaProvider.logged = true;
+      // Reset form only if it exists
+      if (!automatic) this.loginForm.reset();
+      this.navCtrl.parent.select(0);
+    }, error => {
+      console.log(error);
+      this.showAlert(error.statusText);
+    });
+  }
+
+  checkUserExists(): void {
+    this.mediaProvider.checkUser(this.user.username).
+    subscribe((data: UserExists) => {
+      console.log('username free:', data.available);
+      if (!data.available) {
+        this.registerForm.form.controls['username'].setErrors({ 'incorrect': true });
+        this.registerForm.form.controls['username'].markAsTouched();
+        this.userAlert = true;
+      } else {
+        this.userAlert = false;
+      }
+    });
+  }
+
+  /**
+   * Change input validation status to ´invalid´ if no match
+   */
+  checkPasswordMatch(): void {
+    if (this.user.password !== this.confirmPassword) {
+        this.registerForm.form.controls['confirmPassword'].setErrors({ 'incorrect': true });
+        this.registerForm.form.controls['confirmPassword'].markAsTouched();
     }
   }
 
-  loginForm() {
-    this.mediaProvider.login(this.user).subscribe(
-      (response: LoginResponse) => {
-        console.log(response);
-        this.mediaProvider.logged = true;
-        // TODO: save the token to localstorage
-        localStorage.setItem('token', response.token);
-        // move to home page (use navCtrl)
-        this.navCtrl.push(HomePage);
-      },
-      error => {
-        console.log(error);
-      },
-    );
-  }
-
-  registerForm() {
-    this.mediaProvider.checkIfUserExist(this.user).subscribe((response: CheckUserName) => {
-        console.log(response);
-        this.mediaProvider.register(this.user).subscribe(
-          (response: LoginResponse) => {
-            localStorage.setItem('token', response.token);
-            this.navCtrl.push(HomePage);
-            console.log(response);
-          },
-          error => {
-            console.log(error);
-          },
-        );
-      },
-      error => {
-        console.log(error);
-      },
-    );
+  register(): void {
+    if (this.user.password !== this.confirmPassword) {
+      this.showAlert('Passwords do not match!');
+      return;
+    }
+    this.mediaProvider.register(this.user).subscribe((data: UserCreated) => {
+      this.login(true);
+      this.registerForm.reset();
+    }, error => {
+      console.log(error);
+      this.showAlert(error.error.message);
+    });
   }
 
   ionViewDidLoad() {

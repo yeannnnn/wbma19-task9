@@ -5,7 +5,7 @@ import {
   Media,
   // RegisteredResponse,
   User,
-} from '../../interfaces/pic';
+} from '../../interfaces/media';
 
 /*
   Generated class for the MediaProvider provider.
@@ -16,12 +16,15 @@ import {
 @Injectable()
 export class MediaProvider {
   mediaAPI = 'https://media.mw.metropolia.fi/wbma'; // configUrl
-  mediaArray: Media[];
+  mediaFilePath = 'http://media.mw.metropolia.fi/wbma/uploads/';
+  // mediaArray: Media[];
   logged = false;
-  username: string;
-  user_id: number;
-  fullname: string;
-  avatar;
+  user: User = null;
+  token;
+ // username: string;
+ // user_id: number;
+ // fullname: string;
+ // avatar;
   constructor(public http: HttpClient) {
     console.log('Hello MediaProvider Provider');
   }
@@ -64,12 +67,6 @@ export class MediaProvider {
 
   checkIfUserExist(user: User) {
     return this.http.get(this.mediaAPI + '/users/username/' + user.username);
-  }
-
-  user(user: User) {
-    this.username = user.username;
-    this.fullname = user.full_name;
-    this.user_id = user.user_id;
   }
 
   getFilesByTag(tag) {

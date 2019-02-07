@@ -12,7 +12,7 @@ import { MediaProvider } from '../providers/media/media';
 import { PipesModule } from '../pipes/pipes.module';
 import { MenuPage } from '../pages/menu/menu';
 import { LoginRegisterPage } from '../pages/login-register/login-register';
-import { LogoutPage } from '../pages/logout/logout';
+import { LogoutPage } from '../pages/profile/profile';
 import { UploadPage } from '../pages/upload/upload';
 
 @NgModule({

@@ -4,7 +4,7 @@ import { MediaProvider } from '../../providers/media/media';
 import { HomePage } from '../home/home';
 
 import { Observable } from 'rxjs';
-import { LoginResponse, Media, User } from '../../interfaces/pic';
+import { LoginResponse, Media, User } from '../../interfaces/media';
 
 /**
  * Generated class for the LogoutPage page.
@@ -15,7 +15,7 @@ import { LoginResponse, Media, User } from '../../interfaces/pic';
 
 @Component({
   selector: 'page-logout',
-  templateUrl: 'logout.html',
+  templateUrl: 'profile.html',
 })
 export class LogoutPage {
   avatar;

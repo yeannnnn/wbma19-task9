@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
-import { Media } from '../../interfaces/pic';
+import { Media } from '../../interfaces/media';
 import { HttpClient } from '@angular/common/http';
 import { MediaProvider } from '../../providers/media/media';
 import { Observable } from 'rxjs';
