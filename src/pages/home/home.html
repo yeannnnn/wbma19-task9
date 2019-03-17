@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Ionic Blank
+    </ion-title>
+    <ion-buttons end>
+        <button ion-button (click)="uploadButton()">
+          <ion-icon name="add-circle-outline"></ion-icon>
+        </button>
+      </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item *ngFor="let image of mediaArray | async">
+      <ion-thumbnail item-start>
+        <img *ngIf="image.media_type=='image'" [src]="'https://media.mw.metropolia.fi/wbma/uploads/' + (image.file_id | thumbnail: 'small' | async)">
+        <img *ngIf="image.media_type=='video'" [src]="'https://media.mw.metropolia.fi/wbma/uploads/' + (image.file_id | thumbnail: 'screenshot' | async)">
+      </ion-thumbnail>
+      <h2>{{image.title}}</h2>
+      <p>{{image.time_added | date: ('d.M.yyyy')}}</p>
+      <p>{{image.description}}</p>
+      <button (click)="viewItem(image)" ion-button clear item-end>View</button>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
